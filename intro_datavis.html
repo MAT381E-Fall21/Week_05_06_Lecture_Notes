@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>MAT381E-Week 5: Basic Principles of Data Visualization</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="Gül İnan" />
+    <meta name="date" content="2021-10-30" />
+    <script src="intro_datavis_files/header-attrs-2.11/header-attrs.js"></script>
+    <link href="intro_datavis_files/remark-css-0.0.1/default.css" rel="stylesheet" />
+    <script src="intro_datavis_files/fabric-4.3.1/fabric.min.js"></script>
+    <link href="intro_datavis_files/xaringanExtra-scribble-0.0.1/scribble.css" rel="stylesheet" />
+    <script src="intro_datavis_files/xaringanExtra-scribble-0.0.1/scribble.js"></script>
+    <script>document.addEventListener('DOMContentLoaded', function() { window.xeScribble = new Scribble({"pen_color":["#FF0000"],"pen_size":3,"eraser_size":30,"palette":[]}) })</script>
+    <link href="intro_datavis_files/tile-view-0.2.6/tile-view.css" rel="stylesheet" />
+    <script src="intro_datavis_files/tile-view-0.2.6/tile-view.js"></script>
+    <link href="intro_datavis_files/animate.css-3.7.2/animate.xaringan.css" rel="stylesheet" />
+    <link href="intro_datavis_files/tachyons-4.12.0/tachyons.min.css" rel="stylesheet" />
+    <link href="intro_datavis_files/panelset-0.2.6/panelset.css" rel="stylesheet" />
+    <script src="intro_datavis_files/panelset-0.2.6/panelset.js"></script>
+    <link rel="stylesheet" href="xaringan-themer.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+class: left, middle, my-title, title-slide
+
+# MAT381E-Week 5: Basic Principles of Data Visualization
+### Gül İnan
+### Department of Mathematics<br/>Istanbul Technical University
+### October 30, 2021
+
+---
+
+
+
+
+
+
+
+
+
+class: left
+
+# Outline
+
+* Introduction to Data Visualization
+* Introduction to ggplot2 
+* ggplot2 continu'ed
+  * 01-ggplot2.Rmd
+  
+---
+class: center, middle
+
+         **What is going on this graph?**
+
+&lt;img src="images/hifzisiha.jpg" width="70%" height="50%" /&gt;
+
+&lt;!-- First code block is setting options for theme of the slides  --&gt;  
+&lt;!-- Second code block is setting global options R code blocks --&gt;  
+
+---
+# March 13, 2020...
+
+&lt;style type="text/css"&gt;
+.pull-left {
+  float: left;
+  width: 50%;
+}
+.pull-right {
+  float: right;
+  width: 50%;
+}
+&lt;/style&gt;
+
+.pull-left[
+&lt;img src="images/guardian1.png" width="100%" height="100%" /&gt;
+]
+
+.pull-right[
+&lt;img src="images/guardian2.png" width="90%" height="100%" /&gt;
+]
+
+
+[Source](https://www.theguardian.com/world/2020/mar/13/coronavirus-pandemic-visualising-the-global-crisis)
+
+
+---
+
+&lt;style type="text/css"&gt;
+.pull-left {
+  float: left;
+  width: 50%;
+}
+.pull-right {
+  float: right;
+  width: 50%;
+}
+&lt;/style&gt;
+
+# October 22, 2021...
+
+.pull-left[
+&lt;img src="images/vaccine_nyt.png" width="100%" height="100%" /&gt;
+]
+
+.pull-right[
+&lt;img src="images/nyt_projection.png" width="100%" height="100%" /&gt;
+]
+
+[Source](https://www.nytimes.com/interactive/2020/us/covid-19-vaccine-doses.html#new-doses)
+---
+class: middle, center
+
+&lt;img src="images/map1.png" width="90%" height="100%" /&gt;
+
+[Source](https://www.nytimes.com/interactive/2020/us/covid-19-vaccine-doses.html#new-doses)
+---
+class: middle, center
+&lt;img src="images/map2.png" width="85%" height="100%" /&gt;
+
+[Source](https://www.nytimes.com/interactive/2020/us/covid-19-vaccine-doses.html#new-doses)
+---
+- According to an article on [Medium](https://medium.com/nightingale/for-public-health-organizations-data-visualization-is-not-a-choice-e945f54152b8):
+  - "Accurate, high-quality data visualization is, in many cases, the most responsible and effective way to share information and educate people".
+  
+---
+.pull-left[
+&lt;img src="images/speak.png" width="100%" height="100%" /&gt;
+ [Dr. Ömer Durmaz Veri Görselleştirme Sergisi](https://www.arch.columbia.edu/exhibitions/61-speak-to-the-eyes)
+ 
+_Bilginin grafiklerle işleniş serüvenini çarpıcı örneklerle aktaran “Gözlere Konuşmak: Osmanlı’dan Cumhuriyet’e Bilginin Görselleştirilmesi” başlığıyla sunulan Stüdyo X Istanbul’da yer alan sergi **veri görselleştirmeyi grafik tasarım ile çerçevelendirerek inceliyor**._
+
+]
+
+.pull-right[
+- [Kürator Ömer Durmaz'a](https://yazname.com/bilgi-gorsellestirmenin-tarihteki-yolculugu/24/06/2017)  göre:
+  - "Propaganda amaçlı da kullanılan istatistik grafikleri, toplumu yönlendirmede bir iletişim aracına dönüşüyor." 
+  - "Hem sokak sergilerinde, hem de fuarlarda halka anlatılacak konular için infografikler ve istatistik grafikleri kullanılırmış."
+  - "Halkın okuma yazma bilmediği bir toplumda halkı yönlendirmek için görsel olarak konuşmak gerekiyor."
+
+]
+---
+
+&lt;style type="text/css"&gt;
+.pull-left {
+  float: left;
+  width: 50%;
+}
+.pull-right {
+  float: right;
+  width: 50%;
+}
+&lt;/style&gt;
+
+.pull-left[
+&lt;img src="images/designer.png" width="100%" height="100%" /&gt;
+
+[Source](https://qz.com/1781388/criteria-for-good-data-visualization-according-to-design-and-statistics/)
+
+]
+
+.pull-right[
+- The field of data visualization has become a tussle between **accuracy** and **beauty**.
+- In one corner, **designers** say that data is fungible as long as the presentation is **eye-catching**. In the other corner, **statisticians** argue that **clarity** should rarely be sacrificed in the name of novelty or entertainment.
+]
+
+---
+
+&lt;style type="text/css"&gt;
+.pull-left {
+  float: left;
+  width: 50%;
+  height: 100;
+}
+.pull-right {
+  float: right;
+  width: 50%;
+}
+&lt;/style&gt;
+
+.pull-left[
+&lt;img src="images/TAS.png" width="100%" height="100%" /&gt;
+
+- According the seminal paper "How to Display Data Badly" by Howard Wainer:
+  - The aim of good data graphics is to display data accurately and clearly.
+]
+
+.pull-right[
+- For accurate transmission of information, there should be reasonable amount of data density (data plots, values etc) on the plot. Less information results in a bad graph.
+  
+&lt;img src="images/fig11.png" width="100%" height="100%" /&gt;
+]
+
+---
+- Do not put overwhelming information.
+
+&lt;img src="images/fig55.png" width="80%" height="100%" /&gt;
+---
+- Do not hide data in the scales if you are talking about change of a variable over time.
+
+&lt;img src="images/fig1.png" width="70%" height="100%" /&gt;
+
+---
+&lt;style type="text/css"&gt;
+.pull-left {
+  float: left;
+  width: 50%;
+  height: 100;
+}
+.pull-right {
+  float: right;
+  width: 50%;
+}
+&lt;/style&gt;
+
+- Do not manipulate y-axis.
+
+.pull-left[
+&lt;div class="figure"&gt;
+&lt;img src="images/fig23.png" alt="Bad example" width="90%" height="100%" /&gt;
+&lt;p class="caption"&gt;Bad example&lt;/p&gt;
+&lt;/div&gt;
+]
+
+.pull-right[
+&lt;div class="figure"&gt;
+&lt;img src="images/fig24.png" alt="Good example" width="100%" height="100%" /&gt;
+&lt;p class="caption"&gt;Good example&lt;/p&gt;
+&lt;/div&gt;
+]
+---
+
+&lt;style type="text/css"&gt;
+.pull-left {
+  float: left;
+  width: 50%;
+  height: 100;
+}
+.pull-right {
+  float: right;
+  width: 50%;
+}
+&lt;/style&gt;
+
+- Do not change scales in mid-axis. This could be confusing since the axis scales have not been kept standard.
+
+.pull-left[
+&lt;img src="images/fig33.png" width="100%" height="100%" /&gt;
+
+]
+
+.pull-right[
+&lt;img src="images/fig22.png" width="100%" height="100%" /&gt;
+
+]
+
+
+---
+- Do match the magnitude of metaphorical representation with the numbers.
+
+&lt;img src="images/fig66.png" width="50%" height="100%" /&gt;
+
+---
+- Do not feature the wrong graph.
+
+&lt;img src="images/fig44.png" width="60%" height="100%" /&gt;
+
+---
+&lt;style type="text/css"&gt;
+.pull-left {
+  float: left;
+  width: 50%;
+  height: 100;
+}
+.pull-right {
+  float: right;
+  width: 50%;
+}
+&lt;/style&gt;
+
+- Use appropriate color scheme.
+
+.pull-left[
+&lt;img src="images/fig77.png" width="90%" height="100%" /&gt;
+]
+
+.pull-right[
+&lt;img src="images/fig88.png" width="100%" height="100%" /&gt;
+]
+
+---
+- More is available on:
+  - [Data Visualization History](https://time.com/5883299/data-visualization-history/?utm_source=twitter&amp;utm_medium=social&amp;utm_campaign=editorial&amp;utm_term=history_health&amp;linkId=98174810).
+  - [New York Times &amp; American Statistical Association ](https://www.nytimes.com/2020/06/10/learning/over-60-new-york-times-graphs-for-students-to-analyze.html) collaboration on "What is going on this graph?".
+      - [Look at this!](https://www.nytimes.com/2018/01/04/learning/whats-going-on-in-this-graph-jan-9-2018.html)
+
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"highlightStyle": "github",
+"highlightLines": true,
+"countIncrementalSlides": false,
+"ratio": "16:9",
+"navigation": {
+"scroll": false
+}
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>
