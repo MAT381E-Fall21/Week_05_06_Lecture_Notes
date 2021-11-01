@@ -46,8 +46,8 @@ class: left
 
 * Introduction to Data Visualization
 * Introduction to ggplot2 
-* ggplot2 continu'ed
-  * 01-ggplot2.Rmd
+* ggplot2 continu'ed (next week)
+  * 01-ggplot2.Rmd   (next week)
   
 ---
 class: center, middle
@@ -57,6 +57,8 @@ class: center, middle
 ```{r echo=FALSE, out.height='50%', out.width='70%', fig.cap=''}
 knitr::include_graphics('images/hifzisiha.jpg')  
 ```
+
+[Source](https://acikerisim.tbmm.gov.tr/handle/11543/553)
 
 <!-- First code block is setting options for theme of the slides  -->  
 <!-- Second code block is setting global options R code blocks -->  
@@ -76,13 +78,13 @@ knitr::include_graphics('images/hifzisiha.jpg')
 ```
 
 .pull-left[
-```{r echo=FALSE, out.height='100%', out.width='100%', fig.cap=''}
+```{r echo=FALSE, out.height='100%', out.width='100%'}
 knitr::include_graphics('images/guardian1.png')  
 ```
 ]
 
 .pull-right[
-```{r echo=FALSE, out.height='100%', out.width='90%', fig.cap=''}
+```{r echo=FALSE, out.height='100%', out.width='90%'}
 knitr::include_graphics('images/guardian2.png')  
 ```
 ]
@@ -104,16 +106,18 @@ knitr::include_graphics('images/guardian2.png')
 }
 ```
 
-# October 22, 2021...
+# October 29, 2021...
 
 .pull-left[
-```{r echo=FALSE, out.height='100%', out.width='100%', fig.cap=''}
+```{r echo=FALSE, out.height='100%', out.width='100%'}
 knitr::include_graphics('images/vaccine_nyt.png')  
 ```
 ]
 
 .pull-right[
-```{r echo=FALSE, out.height='100%', out.width='100%', fig.cap=''}
+<br>
+<br>
+```{r echo=FALSE, out.height='100%', out.width='100%'}
 knitr::include_graphics('images/nyt_projection.png')  
 ```
 ]
@@ -122,14 +126,14 @@ knitr::include_graphics('images/nyt_projection.png')
 ---
 class: middle, center
 
-```{r echo=FALSE, out.height='100%', out.width='90%', fig.cap=''}
+```{r echo=FALSE, out.height='50%', out.width='75%'}
 knitr::include_graphics('images/map1.png')  
 ```
 
 [Source](https://www.nytimes.com/interactive/2020/us/covid-19-vaccine-doses.html#new-doses)
 ---
 class: middle, center
-```{r echo=FALSE, out.height='100%', out.width='85%', fig.cap=''}
+```{r echo=FALSE, out.height='100%', out.width='85%'}
 knitr::include_graphics('images/map2.png')  
 ```
 
@@ -140,7 +144,7 @@ knitr::include_graphics('images/map2.png')
   
 ---
 .pull-left[
-```{r echo=FALSE, out.height='100%', out.width='100%', fig.cap=''}
+```{r echo=FALSE, out.height='100%', out.width='100%'}
 knitr::include_graphics('images/speak.png')  
 ```
  [Dr. Ömer Durmaz Veri Görselleştirme Sergisi](https://www.arch.columbia.edu/exhibitions/61-speak-to-the-eyes)
@@ -180,7 +184,8 @@ knitr::include_graphics('images/designer.png')
 
 .pull-right[
 - The field of data visualization has become a tussle between **accuracy** and **beauty**.
-- In one corner, **designers** say that data is fungible as long as the presentation is **eye-catching**. In the other corner, **statisticians** argue that **clarity** should rarely be sacrificed in the name of novelty or entertainment.
+- In one corner, **designers** say that data is fungible as long as the presentation is **eye-catching**. 
+- In the other corner, **statisticians** argue that **clarity** should rarely be sacrificed in the name of novelty or entertainment.
 ]
 
 ---
