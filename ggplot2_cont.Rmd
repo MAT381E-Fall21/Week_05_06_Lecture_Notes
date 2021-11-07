@@ -1,0 +1,636 @@
+---
+title: "MAT381E-Week 6: Data Visualization Continue'd"
+subtitle: ""
+author: "Gül İnan"
+institute: "Department of Mathematics<br/>Istanbul Technical University"
+date: "`r format(Sys.Date(), '%B %e, %Y')`"
+output:
+  xaringan::moon_reader:
+    css: ["default", "xaringan-themer.css"] 
+    self_contained: false # if true, fonts will be stored locally
+    nature:
+      titleSlideClass: ["left", "middle", "my-title"]
+      highlightStyle: github
+      highlightLines: true
+      countIncrementalSlides: false
+      ratio: '16:9' # alternatives '16:9' or '4:3' or others e.g. 13:9
+      navigation:
+        scroll: false # disable slide transitions by scrolling
+---
+
+
+
+```{r xaringan-themer, include=FALSE, warning=FALSE}
+library(xaringanthemer)
+style_mono_light(
+  base_color = "#042856", 
+  header_color = "#7cacd4",
+  title_slide_text_color = "#7cacd4",
+  link_color = "#0000FF",
+  text_color = "#000000",
+  background_color = "#FFFFFF",
+  header_h1_font_size ="2.00rem"
+  )
+```
+
+```{r xaringan-scribble, echo=FALSE}
+xaringanExtra::use_scribble()
+xaringanExtra::use_xaringan_extra(c("tile_view", "animate_css", "tachyons"))
+```
+
+```{r, echo=FALSE, purl=FALSE, message = FALSE}
+knitr::opts_chunk$set(comment = "#>", purl = FALSE, fig.showtext = TRUE, out.width="40%", retina = 2)
+```
+
+# Data
+
+- We will be using data from the *National Morbidity and Mortality Air Pollution Study* (NMMAPS) which is available in [Statistical Methods in Environmental Epidemiology with R](http://www.springer.com/de/book/9780387781662).
+- The data can be viewed in [here](https://github.com/z3tt/R-Tutorials/blob/master/ggplot2/chicago-nmmaps.csv).
+- <p> **Data Description:**
+The data set contains daily mortality (all causes, CVD, respiratory), weather (temperature, dew point temperature) and pollution data (PM10 and ozone) for Chicago in the period 1987-2000 from NMMAPS. <p>
+- Here are the variables in this data set:
+
+```{r, eval=F}
+`date`: Date in the period 1987-2000.
+`death`: Counts of all cause mortality excluding accident.
+`temp`: Mean temperature (in Celsius degrees).
+`dewpoint`: Dew point temperature.
+`pm10`: PM10 (More info https://cevreselgostergeler.csb.gov.tr/hava-kalitesinde-pm10-ve-so2-ortalamalari-i-85734)
+`o3`: Ozone.
+`time`: The sequence of observations.
+`season`: season.
+`year`: Year.
+```
+
+---
+- We can import the data into our `R` session:
+```{r, warning=F, message=F}
+# full address: https://github.com/Z3tt/R-Tutorials/blob/master/ggplot2/chicago-nmmaps.csv
+chicago <- readr::read_csv("https://raw.githubusercontent.com/Z3tt/R-Tutorials/master/ggplot2/chicago-nmmaps.csv")
+```
+
+```{r, eval=F}
+#run it on your machine
+#check the structure of the data
+str(chicago)
+```
+
+
+```{r, eval=F}
+#run it on your machine
+#view it on the data viewer panel
+View(chicago)
+```
+
+---
+class: center, middle
+
+# ggplot2 continu'ed
+
+![Ggplot2](logo/ggplot2.png)  
+
+---
+class: middle, center
+
+# Plot Elements
+
+---
+class: center, middle
+
+# An Overview of a Plot
+
+```{r echo=FALSE, out.width='70%'}
+knitr::include_graphics('images/ggplotoverview.jpeg') 
+```
+---
+class: center, middle
+
+# Legends...
+
+```{r echo=FALSE, out.width='70%'}
+knitr::include_graphics('images/legendtrump.jpeg') 
+```
+
+---
+#### Add a Legend
+- The `ggplot2` adds a **legend** by default when **mapping a variable** to an **aesthetic** inside `aes()`. 
+- Let's **color** the plot based on _season_. In other words,
+let's map the variable `season` to the `aes`thetic `color`. 
+- We can see that by default the **legend title** is what we specified in the **color argument**:
+
+```{r out.width="35%"}
+library(ggplot2)
+#Aesthetic mappings describe how variables in the data are mapped to #visual properties (aesthetics) of geoms. 
+#Aesthetic mappings can be set in ggplot() and in individual layers.
+#aes() is a quoting function. This means that its inputs are quoted to be evaluated in the context of the data.
+ggplot(chicago, aes(x = date, y = temp, color = season)) + #<<
+  geom_point() +
+  labs(x = "Year", y = "Temperature (°F)")
+```
+---
+#### Change Legend Title
+
+- The easiest way to **change the title of the legend** is the `labs()` layer:
+
+```{r warning=FALSE, out.width="35%"}
+ggplot(chicago, aes(x = date, y = temp, color = season)) +
+  geom_point() +
+  labs(x = "Year", y = "Temperature (°F)",         #<<
+       color = "Seasons\nindicated\nby colors:")   #<<
+```
+
+---
+
+- The `legend aesthetic`  details can be changed via `theme()` function with the following functions:
+
+|Axis element  |Description     | Function         | Description | Aesthetics
+|--------------|----------------------------------------------------------------------------|
+| `legend.title` | legend title | `element_text()` |text         |`size`, `color`, `face`, `angle`, `hjust`, `vjust` |
+| `legend.text` | plot subtitle | `element_text()` |text         |`size`, `color`, `face`, `angle`, `hjust`, `vjust`|
+| `legend.key` | background underneath legend keys | `element_rect()` |rectangular         |`size`, `fill`, `color`, `linetype`|
+| `legend.background` | background of legend | `element_rect()` |rectangular         |`size`, `fill`,  `color`, `linetype`|
+| `legend.position` | position of legend |- |-|-|
+                                
+---
+
+- Change the color, size, and face of `theme()` element `legend title`:
+
+```{r warning=FALSE, out.width="35%"}
+ggplot(chicago, aes(x = date, y = temp, color = season)) +
+  geom_point() +
+  labs(x = "Year", y = "Temperature (°F)",         
+       color = "Seasons\nindicated\nby colors:") +
+  theme(legend.title = element_text(color = "chocolate",  #<<
+                                    size = 14, face = "bold")) #<<
+```
+
+---
+#### Change Order of Legend Keys
+
+- We can achieve this by **changing the levels** of the variable `season`:
+
+```{r, eval=F}
+chicago$season <-
+  factor(chicago$season,
+         levels = c("Winter", "Spring", "Summer", "Autumn")) #<<
+```
+
+---
+```{r}
+ggplot(chicago, aes(x = date, y = temp, color = season)) +
+  geom_point() +
+  labs(x = "Year", y = "Temperature (°F)")
+```
+
+---
+
+#### Change Background Boxes in the Legend
+
+- To change line color and the background color (fill) of the legend keys, we adjust the setting for the `theme()` element `legend.key`:
+
+```{r out.width="30%", warning=FALSE}
+ggplot(chicago, aes(x = date, y = temp, color = season)) +
+  geom_point() +
+  labs(x = "Year", y = "Temperature (°F)") +
+  theme(legend.key = element_rect(color="red", fill = "blue"))  #<<
+```
+---
+- If we want to get rid of them entirely use `fill = NA` or `fill = "transparent"`.
+
+```{r out.width="30%", warning=FALSE}
+ggplot(chicago, aes(x = date, y = temp, color = season)) +
+  geom_point() +
+  labs(x = "Year", y = "Temperature (°F)") +
+  theme(legend.key = element_rect(color="black", fill = "NA"))  #<<
+```
+
+---
+
+#### Change Legend Position
+
+- To change position of the legend, we adjust the setting for the `theme` element `legend.position`:
+- The allowed values for the arguments `legend.position` are : “left”,“top”, “right”, “bottom”.
+
+```{r out.width="30%", warning=FALSE}
+ggplot(chicago, aes(x = date, y = temp, color = season)) +
+  geom_point() +
+  labs(x = "Year", y = "Temperature (°F)") +
+  theme(legend.position = "bottom")  #<<    
+```     
+
+---
+- Note that, the argument `legend.position` can be also a numeric vector `c(x,y)`. In this case it is possible to position the legend inside the plotting area. `x` and `y` are the coordinates of the legend box. Their values should be between `0` and `1`. `c(0,0)` corresponds to the “bottom left” and `c(1,1)` corresponds to the “top right” position.
+
+```{r out.width="30%", warning=FALSE}
+ggplot(chicago, aes(x = date, y = temp, color = season)) +
+  geom_point() +
+  labs(x = "Year", y = "Temperature (°F)") +
+  theme(legend.position = c(0.5,0.5))  #<<
+```
+
+---
+class: center, middle
+
+# Working with Panel Grid Lines and Background
+
+---
+class: center, middle
+
+# An Overview of a Plot
+
+```{r echo=FALSE, out.width='70%'}
+knitr::include_graphics('images/ggplotoverview.jpeg') 
+```
+
+---
+#### Change Grid Lines
+
+- There are two types of grid lines: major grid lines indicating the thick lines and minor grid lines between the major ones. 
+- You can change all of these by overwriting the defaults in `theme()` for:
+  - `panel.grid`: grid lines (`element_line()`).
+  - `panel.grid.major`: or `panel.grid.major.x`, `panel.grid.major.y` (`element_line()`).
+  - `panel.grid.minor`: or `panel.grid.major.x`, `panel.grid.major.y`(`element_line()`).
+ 
+---
+```{r}
+ggplot(chicago, aes(x = date, y = temp)) +
+  geom_point(color = "firebrick") +
+  labs(x = "Year", y = "Temperature (°F)") +
+  theme(panel.grid = element_line(color = "blue", size = .5)) #<<
+```
+---
+```{r grid-lines}
+ggplot(chicago, aes(x = date, y = temp)) +
+  geom_point(color = "firebrick") +
+  labs(x = "Year", y = "Temperature (°F)") +
+  theme(panel.grid.major = element_line(color = "blue", size = .5), #<<
+        panel.grid.minor = element_line(color = "green", size = .5)) #<<
+```
+
+---
+- We can even specify settings for all four different levels:
+
+---
+```{r grid-lines-x-y}
+ggplot(chicago, aes(x = date, y = temp)) +
+  geom_point(color = "firebrick") +
+  labs(x = "Year", y = "Temperature (°F)") +
+  theme(panel.grid.major = element_line(size = .5, linetype = "dashed"),
+        panel.grid.minor = element_line(size = .25, linetype = "dotted"),
+        panel.grid.major.x = element_line(color = "red1"),
+        panel.grid.major.y = element_line(color = "blue1"),
+        panel.grid.minor.x = element_line(color = "red4"),
+        panel.grid.minor.y = element_line(color = "blue4"))
+```
+---
+
+- And, of course, you can remove some or all grid lines if you like:
+
+```{r grid-remove}
+ggplot(chicago, aes(x = date, y = temp)) +
+  geom_point(color = "firebrick") +
+  labs(x = "Year", y = "Temperature (°F)") +
+  theme(panel.grid.minor = element_blank()) #<<
+```
+
+---
+
+```{r}
+ggplot(chicago, aes(x = date, y = temp)) +
+  geom_point(color = "firebrick") +
+  labs(x = "Year", y = "Temperature (°F)") +
+  theme(panel.grid = element_blank()) #<<
+```
+
+---
+
+#### Change the Panel Background Color
+
+- To change the background color (fill) of the panel area (i.e. the area where the data is plotted), one needs to adjust the `theme` element `panel.background`:
+  - `panel.background`: background of plotting area, drawn underneath plot (`element_rect()`).
+
+---
+
+```{r panel-color}
+ggplot(chicago, aes(x = date, y = temp)) +
+  geom_point(color = "#1D8565", size = 2) +
+  labs(x = "Year", y = "Temperature (°F)") +
+  theme(panel.background = element_rect(color = "blue", fill = "pink", #<<  
+                                        size = 2)) #<<
+                                        
+```
+
+---
+#### Change the Plot Background Color
+
+- Similarly, to change the background color (fill) of the plot area, one needs to modify the theme element `plot.background`:
+
+---
+```{r background-color}
+ggplot(chicago, aes(x = date, y = temp)) +
+  geom_point(color = "firebrick") +
+  labs(x = "Year", y = "Temperature (°F)") +
+  theme(plot.background = element_rect(color = "gray30", fill = "gray60", #<<
+                                       size = 2)) #<<
+```
+
+---
+- We can achieve a unique background color by either setting the same colors in both `panel.background` and `plot.background` or by setting the background filling of the panel to `"transparent"` or `NA`:
+
+---
+```{r background-color-same}
+ggplot(chicago, aes(x = date, y = temp)) +
+  geom_point(color = "firebrick") +
+  labs(x = "Year", y = "Temperature (°F)") +
+  theme(panel.background = element_rect(fill = NA), #<<
+        plot.background = element_rect(fill = "gray60", #<<
+                                       color = "gray30", size = 2)) #<<
+```
+
+---
+class: middle, center
+
+# Working with Themes 
+
+---
+##### Change the Overall Plotting Style
+
+- We can change the entire look of the plots by using themes. 
+- The `ggplot2` package comes with **eight built-in themes**.
+ 
+---
+```{r ggplot2-theme-gallery, purl=FALSE, fig.width=11, fig.height=7}
+
+p <- ggplot(chicago, aes(x = date, y = temp)) +
+       geom_point(color = "gray30", alpha = .3) +
+       labs(x = "Year", y = "Temperature (°F)")
+
+p1 <- p + 
+      theme_gray() + 
+      ggtitle("theme_gray()")
+
+p2 <- p + 
+      theme_bw() + 
+      ggtitle("theme_bw()")
+
+p3 <- p + 
+      theme_classic() + 
+      ggtitle("theme_classic()")
+
+p4 <- p + 
+      theme_dark() + 
+      ggtitle("theme_dark()")
+
+p5 <- p + 
+      theme_light() + 
+      ggtitle("theme_light()")
+
+p6 <- p + 
+      theme_linedraw() + 
+      ggtitle("theme_linedraw()")
+```
+
+
+---
+```{r purl=FALSE, fig.width=11, fig.height=7}
+
+p7 <- p + 
+      theme_minimal() + 
+      ggtitle("theme_minimal()")
+
+p8 <- p + 
+      theme_void() + 
+      ggtitle("theme_void()") 
+```  
+---
+```{r purl=FALSE, out.width="50%"}
+library(patchwork)
+p1 + p2
+```
+---
+```{r purl=FALSE, out.width="50%"}
+library(patchwork)
+p3 + p4
+```
+---
+```{r purl=FALSE, out.width="50%"}
+library(patchwork)
+p5 + p6
+```
+---
+```{r purl=FALSE, out.width="50%"}
+library(patchwork)
+p7 + p8
+```
+---
+
+class: center, middle
+# Working with Multi-Panel Plots 
+
+---
+
+- The `ggplot2` package has two nice functions, namely,  `facet_wrap()` and `facet_grid()` for creating multi-panel plots, called *facets*. 
+- They are related but a little different: 
+  - The command `facet_wrap()` creates essentially a ribbon of plots based on a single variable and
+  - The command `facet_grid()` spans a grid of two variables.
+
+---
+#### Create a Multi-Panel Plots Based on One Variable
+
+- The `facet_wrap()` command creates a facet of a single variable, written with a tilde in front: `facet_wrap(~ variable)`. 
+- The appearance of these subplots is controlled by the arguments `ncol` and `nrow`:
+
+---
+```{r wrap-plots-1-row}
+g <- ggplot(chicago, aes(x = date, y = temp)) +
+       geom_point(color = "blue") +
+       labs(x = "Year", y = "Temperature (°F)") +
+       theme(axis.text.x = element_text(angle = 45, vjust = 1, hjust = 1))
+
+g + facet_wrap(~ year, nrow = 1) #<<
+```
+---
+- Accordingly, you can arrange the plots as you like as a matrix...
+
+```{r }
+g + facet_wrap(~ year, nrow = 2) #<<
+```
+
+---
+#### Allow Scales to Roam Free
+
+- The default for multi-panel plots in `ggplot2` is to use equivalent scales in each panel. But sometimes you want to allow a panels own data to determine the scale. This is often not a good idea since it may give your user the wrong impression about the data. But sometimes it is indeed useful and to do this you can set `scales = "free"`:
+
+
+```{r out.width='30%'}
+g + facet_wrap(~ year, nrow = 2, scales = "free") #<<
+```
+
+---
+#### Create a Grid of Plots Based on Two Variables
+
+ - In case of two variables, `facet_grid()` does the job. Here, the order of the variables determines the number of rows and columns:
+
+---
+```{r grid-plots}
+ggplot(chicago, aes(x = date, y = temp)) +
+  geom_point(color = "orangered", alpha = .3) +
+  theme(axis.text.x = element_text(angle = 45, vjust = 1, hjust = 1)) +
+  labs(x = "Year", y = "Temperature (°F)") +
+  facet_grid(year ~ season) #<<
+```
+
+---
+
+- To change from row to column arrangement you can change `facet_grid(year ~ season)` to `facet_grid(season ~ year)`.
+- The function `facet_wrap` can also take two variables and you are still able to control the grid design:
+
+```{r out.width='30%'}
+g + facet_wrap(year ~ season, nrow = 4, scales = "free_x") #<<
+```
+
+---
+#### Create a Multi-Panel Plot Based on (Different) Plots
+
+- There are several ways how plots can be combined. The easiest approach is the [`patchwork` package](https://github.com/thomasp85/patchwork):
+
+```{r}
+p1 <- ggplot(chicago, aes(x = date, y = temp,
+                       color = season)) +
+        geom_point() +
+        geom_rug() +
+        labs(x = "Year", y = "Temperature (°F)")
+
+p2 <- ggplot(chicago, aes(x = date, y = o3)) +
+        geom_line(color = "gray") +
+        geom_point(color = "darkorange2") +
+        labs(x = "Year", y = "Ozone")
+```
+
+---
+```{r}
+library(patchwork)
+p1 + p2
+```
+
+---
+- We can change the order by "dividing" both plots (and note the alignment even though one has a legend and one doesn't!):
+
+```{r combine-plots-patchwork-2, fig.height=8}
+p1 / p2
+```
+
+---
+- And also nested plots are possible!
+
+```{r combine-plots-patchwork-3, fig.height=6}
+(g + p2) / p1
+```
+
+---
+class: middle, center
+
+# Add Text Annotations
+
+---
+- We can use `geom_text()` or `geom_label()` to add annotations to a ggplot. 
+
+
+```{r out.width='30%'}
+g <-
+  ggplot(chicago, aes(x = temp, y = dewpoint)) +
+  geom_point() +
+  labs(x = "Temperature (°F)", y = "Dewpoint")+
+  geom_text(aes(x = 25, y = 60), #<<
+                label = "This is a useful annotation") #<<
+g
+```
+
+---
+- By the way, of course we can change the properties of the displayed text:
+
+```{r textbox-label-custom, warning=FALSE}
+g +
+  geom_text(aes(x = 25, y = 60),#<<
+                label = "This is a useful annotation",#<<
+            family = "Bangers",#<<
+            size = 7, color = "darkcyan") #<<
+```
+
+---
+
+# Other relavant packages
+
+| Package       | Description |
+|---------------|--------------------------|
+| `colorspace()`| for manipulating colors  |
+| `corrr()`     | for calculating correlation matrices|
+| `cowplot()`   | for composing ggplots  | 
+| `ggdark()`    | for themes and inverting colors | 
+| `ggforce()`   | for sina plots and other cool stuff | 
+| `ggrepel()`   | for nice text labeling |
+| `ggridges()`  | for ridge plots |
+| `ggsci()`     | for nice color palettes|
+| `ggtext()`    | for advanced text rendering|     
+| `ggthemes()`  | for additional themes |     
+| `grid()`      | for creating graphical objects|  
+
+---
+
+# Other relavant packages
+
+| Package       | Description |
+|---------------|--------------------------|
+| `gridExtra()` | for additional functions for "grid" graphics|  
+| `patchwork()` | for multi-panel plots|
+| `rcartocolor()` | for great color palettes |
+| `scico()`     |for perceptional uniform palettes|
+| `showtext()`  |for custom fonts | 
+
+---
+
+- **Class-in exercise:** Visit the web page 
+https://www.ft.com/content/38f5398a-8588-48a1-86db-3e8050bace51
+and focus on the graphic.
+
+```{r echo=FALSE, out.width='60%'}
+knitr::include_graphics('images/covidindia.png')  
+```
+
+- Tell us what information you see on the data graphic. 
+- Tell us what graphical elements you need to draw this graphic?
+
+
+---
+More at:
+
+ - [Other graphics 1](https://ivelasq.rbind.io/blog/other-geoms/).
+ - [Other graphica 2](https://bookdown.org/BaktiSiregar/data-science-for-beginners/Advanced-Visualizations.html).
+ 
+---
+
+# Additional Resources
+
+- ["ggplot2: Elegant Graphics for Data Analysis"](https://ggplot2-book.org/) by Hadley Wickham, available via open-access!
+- ["Fundamentals of Data Visualization"](http://serialmentor.com/dataviz/) by Claus O. Wilke about data visualization in general but using `{ggplot2}`. (You can find the codes on [his GitHub profile](https://github.com/clauswilke/dataviz).)
+- ["Cookbook for R"](http://www.cookbook-r.com/Graphs/)
+by Winston Chang with recipes to produce R plots
+- Gallery of the [Top 50 ggplot2 visualizations](http://r-statistics.co/Top50-Ggplot2-Visualizations-MasterList-R-Code.html)
+- Gallery of [`{ggplot2}` extension packages](https://exts.ggplot2.tidyverse.org/gallery/)
+- [How to extend `{ggplot2}`](https://cran.r-project.org/web/packages/ggplot2/vignettes/extending-ggplot2.html) by Hadley Wickham
+- The fantastic [R4DS Online Learning Community](https://www.rfordatasci.com/) that offers help and mentoring for all things related to the content of the ["R for Data Science" book](r4ds.had.co.nz/) by Hadley Wickham
+- [#TidyTuesday](https://github.com/rfordatascience/tidytuesday), a weekly social data project focusing on ggplots—check also [#TidyTuesday on Twitter](https://twitter.com/hashtag/TidyTuesday?lang=en) and [this collection of contributions by Neil Grantham](https://nsgrantham.com/tidytuesdayrocks/)
+- A two-part, 4.5-hours tutorial series by Thomas Linn Pedersen ([Part 1](https://www.youtube.com/watch?v=h29g21z0a68) | [Part 2](https://www.youtube.com/watch?v=0m4yywqNPVY))
+
+   
+---
+# Attributions
+
+- This lecture note is mainly developed by following sources:
+   - [Berlin](https://github.com/Z3tt/Z3tt/blob/master/content/post/2019-08-05_ggplot2-tutorial.Rmd),
+   - [Paul](https://bookdown.org/paul/applied-data-visualization),
+   - [Coding Club](https://ourcodingclub.github.io/tutorials/datavis/), and
+   - [Stda](http://www.sthda.com/english/wiki/ggplot2-legend-easy-steps-to-change-the-position-and-the-appearance-of-a-graph-legend-in-r-software).
+
+
+
